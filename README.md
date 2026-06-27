@@ -1,158 +1,159 @@
-# VK Newsletter Automation
+# Автоматизированная еженедельная рассылка по эфирным маслам во ВКонтакте
 
-Automated weekly newsletter publishing for essential oils in VKontakte (VK) using Claude Code for content generation and VK API for publishing.
+Автоматизированная еженедельная рассылка по эфирным маслам во ВКонтакте (VK) с использованием Claude Code для генерации контента и VK API для публикации.
 
-## Overview
+## Обзор
 
-This project automates the creation and publishing of weekly posts about essential oils to a VK community or personal wall. It leverages Claude Code (via the `/agent` commands) for researching recent scientific articles, generating post drafts, and optionally publishing them on a schedule via Windows Task Scheduler or cron (WSL).
+Этот проект автоматизирует создание и публикацию еженедельных постов о эфирных маслах в сообществе или на личной стене VK. Он использует Claude Code (через команды `/agent`) для исследования последних научных статей, генерации черновиков постов и, при необходимости, публикации по расписанию через Планировщик задач Windows или cron (WSL).
 
-## Features
+## Функции
 
-- **Research automation**: Use the `explore` agent to fetch recent PubMed articles on essential oils.
-- **Content generation**: Use the `general-purpose` agent to draft posts based on collected sources.
-- **Verification**: Optionally review generated content with the `verify` agent.
-- **Scheduled publishing**: Set up weekly automation via Task Scheduler (Windows) or cron (WSL).
-- **Easy configuration**: Store VK token and group ID in `.env`.
-- **Extensible**: Adapt templates, add new content formats (video previews, carousels), integrate with Google Sheets or email newsletters.
+- **Автоматизация исследований**: используйте агент `explore` для получения последних статей PubMed по эфирным маслам.
+- **Генерация контента**: используйте агент `general-purpose` для создания черновиков постов на основе собранных источников.
+- **Проверка**: опциональная проверка сгенерированного контента агентом `verify`.
+- **Запланированная публикация**: настройте еженедельную автоматизацию через Планировщик задач (Windows) или cron (WSL).
+- **Простая настройка**: храните токен VK и ID группы в файле `.env`.
+- **Расширяемость**: адаптируйте шаблоны, добавляйте новые форматы контента (видео‑превью, карусели), интегрируйте с Google Sheets или e‑mail рассылками.
 
-## Project Structure
+## Структура проекта
 
 ```
 vk_newsletter/
 ├─ src/
-│   └─ post_to_vk.py          # Main script: generates and publishes posts
+│   └─ post_to_vk.py          # Основной скрипт: генерация и публикация постов
 ├─ data/
-│   └─ sources.md             # List of scientific sources (DOIs, annotations)
-├─ docs/                      # Additional documentation (optional)
-├─ .env                       # Environment variables (VK_TOKEN, GROUP_ID) – **not committed**
-├─ .env.example               # Template for environment variables
-├─ requirements.txt           # Python dependencies (requests, python-dotenv)
-└─ README.md                  # This file
+│   └─ sources.md             # Список научных источников (DOI, аннотации)
+├─ docs/                      # Дополнительная документация (по желанию)
+├─ .env                       # Переменные окружения (VK_TOKEN, GROUP_ID) – **не коммитится**
+├─ .env.example               # Шаблон для переменных окружения
+├─ requirements.txt           # Зависимости Python (requests, python-dotenv)
+└─ README.md                  # Этот файл
 ```
 
-## Setup
+## Настройка
 
-### 1. Clone the repository
+### 1. Клонируйте репозиторий
 
 ```bash
 git clone https://github.com/lukinyury/vk_newsletter.git
 cd vk_newsletter
 ```
 
-### 2. Install dependencies
+### 2. Установите зависимости
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configure environment
+### 3. Настройте окружение
 
-Copy the example environment file and fill in your VK credentials:
+Скопируйте пример файла окружения и заполните свои учетные данные VK:
 
 ```bash
 cp .env.example .env
-# Edit .env and add your values:
+# Отредактируйте .env и добавьте свои значения:
 # VK_TOKEN=your_vk_service_token_with_wall_post_permission
 # GROUP_ID=your_group_id_without_minus_sign
 ```
 
-> **Note**: Keep `.env` private and never commit it to the repository.
+> **Важно**: храните файл `.env` в безопасном месте и никогда не коммитьте его в репозиторий.
 
-### 4. (Optional) Prepare sources
+### 4. (Опционально) Подготовьте источники
 
-Edit `data/sources.md` with a list of recent research articles you want to reference. You can also use the provided research agent to update this file weekly.
+Отредактируйте `data/sources.md`, добавив список последних исследовательских статей, которые вы хотите ссылаться. Вы также можете использовать исследовательский агент для еженедельного обновления этого файла.
 
-### 5. Test the script
+### 5. Тестовый запуск
 
-Run the script in test mode (comment out the actual VK API call or use your own user ID) to see the generated post:
+Запустите скрипт в тестовом режиме (закомментируйте реальный вызов VK API или используйте свой собственный ID пользователя), чтобы увидеть сгенерированный пост:
 
 ```bash
 python src/post_to_vk.py
 ```
 
-Check the console output; the generated post will be printed. Verify the content, links, and hashtags.
+Проверьте вывод в консоли; сгенерированный пост будет напечатан. Убедитесь, что содержание, ссылки и хештеги корректны.
 
-### 6. Schedule automatic publishing
+### 6. Настройте автоматическую публикацию
 
-#### Windows Task Scheduler
+#### Планировщик задач Windows
 
-1. Open **Task Scheduler**.
-2. Create a basic task:
-   - Trigger: Weekly, choose day and time.
-   - Action: Start a program.
-   - Program: `python`
-   - Arguments: `C:\full\path\to\vk_newsletter\src\post_to_vk.py`
-   - Start in: `C:\full\path\to\vk_newsletter`
-3. Ensure the environment variables are accessible (you can create a batch file that sets them before calling Python).
+1. Откройте **Планировщик задач**.
+2. Создайте простую задачу:
+   - Триггер: Еженедельно, выберите день и время.
+   - Действие: Запустить программу.
+   - Программа: `python`
+   - Аргументы: `C:\полный\путь\к\vk_newsletter\src\post_to_vk.py`
+   - Рабочая папка: `C:\полный\путь\к\vk_newsletter`
+3. Убедитесь, что переменные окружения доступны (можно создать пакетный файл, который установит их перед запуском Python).
 
 #### WSL + cron
 
-1. Edit your crontab (`crontab -e`).
-2. Add a line (example: every Monday at 10:00 AM):
+1. Откройте crontab (`crontab -e`).
+2. Добавьте строку (пример: каждый понедельник в 10:00):
 
    ```
    0 10 * * 1 /usr/bin/python3 /mnt/c/Users/Юрий/finance/vk_newsletter/src/post_to_vk.py >> /mnt/c/Users/Юрий/finance/vk_newsletter/logs/cron.log 2>&1
    ```
 
-   Adjust paths as needed.
+   При необходимости скорректируйте пути.
 
-## Usage
+## Использование
 
-### Research step (optional, weekly)
+### Шаг исследования (опционально, еженедельно)
 
-Run the explore agent to fetch recent articles:
+Запустите агент `explore`, чтобы получить последние статьи:
 
 ```
 /agent explore --prompt "Найди 7 последних статей PubMed про эфирные масла (лаванда, мята, эвкалипт) за последние 30 дней, верни список с DOI и короткой аннотацией"
 ```
 
-Copy the output into `data/sources.md`.
+Скопируйте вывод в `data/sources.md`.
 
-### Generation & publishing
+### Генерация и публикация
 
-Execute the main script:
+Выполните основной скрипт:
 
-```
+```bash
 python src/post_to_vk.py
 ```
 
-The script will:
-- Determine the week parity (odd/even) to alternate between educational and promotional posts.
-- Read `data/sources.md` and embed a few citations into the post.
-- Render the post using the Jinja2-style template inside `post_to_vk.py`.
-- Publish to the VK group defined by `GROUP_ID` using the `VK_TOKEN`.
+Скрипт выполнит:
+- Определение типа поста (чётная неделя – образовательный, нечётная – рекламный) по номеру недели.
+- Чтение `data/sources.md` и внедрение нескольких ссылок в пост.
+- Рендеринг поста с использованием шаблона Jinja2‑стиля внутри `post_to_vk.py`.
+- Публикацию в группу VK, определённую через `GROUP_ID`, с помощью токена `VK_TOKEN`.
+- Вывод результата в консоль; при необходимости журнал можно вести в файл.
 
-### Customizing the template
+### Настройка шаблона
 
-Edit the `template` variable inside `src/post_to_vk.py` or move it to an external file (e.g., `data/template.md`) and load it at runtime.
+Отредактируйте переменную `template` внутри `src/post_to_vk.py` или вынесите её во внешний файл (например, `data/template.md`) и загружайте её во время выполнения.
 
-## How it works
+## Как это работает
 
-1. **Determine post type** – based on week number (even = educational, odd = promotional).
-2. **Load sources** – reads `data/sources.md`.
-3. **Generate text** – uses a simple template; for full AI generation, replace the template with a call to the `general-purpose` agent.
-4. **Publish** – sends a POST request to `https://api.vk.com/method/wall.post` with parameters `owner_id=-GROUP_ID`, `message=<generated_text>`, `access_token=VK_TOKEN`, `v=5.199`.
-5. **Logs** – prints result to console; optionally log to file.
+1. **Определение типа поста** – основан на номере недели (чётный = образовательный, нечётный = рекламный).
+2. **Загрузка источников** – читает `data/sources.md`.
+3. **Генерация текста** – использует простой шаблон; для полной генерации ИИ замените шаблон вызовом агента `general-purpose`.
+4. **Публикация** – отправляет POST‑запрос к `https://api.vk.com/method/wall.post` с параметрами `owner_id=-GROUP_ID`, `message=<generated_text>`, `access_token=VK_TOKEN`, `v=5.199`.
+5. **Логирование** – выводит результат в консоль; при желании можно вести журнал в файл.
 
-## Requirements
+## Требования
 
 - Python 3.9+
 - `requests`
 - `python-dotenv`
 
-See `requirements.txt` for exact versions.
+См. `requirements.txt` для точных версий.
 
-## Security
+## Безопасность
 
-- The `.env` file contains sensitive tokens. It is listed in `.gitignore` to avoid accidental commits.
-- Use a VK service token with limited scope (only `wall.post` is needed).
-- Regularly rotate your token.
+- Файл `.env` содержит конфиденциальные токены. Он указан в `.gitignore`, чтобы избежать случайных коммитов.
+- Используйте сервисный токен VK с ограниченным набором прав (достаточно разрешения `wall.post`).
+- Периодически вращайте ваш токен.
 
-## License
+## Лицензия
 
-This project is provided for educational purposes. Feel free to adapt and extend it for your own VK automation needs.
+Этот проект предоставляется в образовательных целях. Вы можете свободно адаптировать и расширять его для собственных нужд автоматизации ВКонтакте.
 
-## Acknowledgments
+## Благодарности
 
-- Inspired by the Claude Code course and the Ligа инвесторов community.
-- VK API documentation: https://dev.vk.com/method/wall.post
+- Вдохновлён курсом Claude Code и сообществом Лиги инвесторов Евгения Ходченкова.
+- Документация VK API: https://dev.vk.com/method/wall.post
