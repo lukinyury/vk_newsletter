@@ -155,5 +155,5 @@ python src/post_to_vk.py
 
 ## Благодарности
 
-- Вдохновлён курсом Claude Code и сообществом Лиги инвесторов Евгения Ходченкова.
+- Вдохновлён курсом Claude Code.
 - Документация VK API: https://dev.vk.com/method/wall.post
