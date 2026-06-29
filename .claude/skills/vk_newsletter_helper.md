@@ -1,6 +1,6 @@
 ---
 name: vk_newsletter_helper
-description: Helper skill for VK newsletter project: understand structure, start service, make changes, update README, check errors, prepare for publication.
+description: "Helper skill for VK newsletter project: understand structure, start service, make changes, update README, check errors, prepare for publication."
 metadata:
   args:
     action:
